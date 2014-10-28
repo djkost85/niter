@@ -108,3 +108,10 @@ App::bind('Hybrid_Auth', function()
 {
 	return new Hybrid_Auth(app_path() . '/config/hybridauth.php');
 });
+
+Event::listen('cron.collectJobs', function() {
+    Cron::add('Sitemap', '0 0 2 * *', function() {
+        Helpers::createSitemap();
+        return null;
+    });
+});
