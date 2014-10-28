@@ -85,7 +85,7 @@ class SearchController extends BaseController
 		else
 		{
 			$encoded = urlencode($input);
-		}
+   		}
 		$clean = e($input);
 
 		//make search cache section name
@@ -93,20 +93,26 @@ class SearchController extends BaseController
 
 		if ($encoded)
 		{
-			if ($this->options->useCache())
-        	{
-				if ( ! $results = $this->cache->get($section, md5($encoded)) )
-				{
-					$results = $this->search->byQuery($encoded);
+            if (Helpers::hasSuperAccess()) {
+                $results = $this->search->byQuery($encoded);
+            }
+            else{
+                if ($this->options->useCache())
+                {
+                    $results = $this->cache->get($section, md5($encoded));
+                    if ( !$results || count($results) == 0)
+                    {
+                        $results = $this->search->byQuery($encoded);
 
-					$this->cache->put($section, md5($encoded), $results);
-				}
-			}
-			else
-			{
-				$results = $this->search->byQuery($encoded);
-			}
-			
+                        $this->cache->put($section, md5($encoded), $results);
+                    }
+                }
+                else
+                {
+                    $results = $this->search->byQuery($encoded);
+                }
+            }
+
 			return View::make('search.results')->withData($results)->withTerm($clean);
 		}
 

@@ -471,6 +471,16 @@ class Helpers
         File::put("sitemaps/sitemap.xml", $contents);
     }
 
+    public static function errorLog($text, $directory, $location, $value = null)
+    {
+        if (self::hasAccess('super')) {
+            if ($value)
+                error_log("\n=>" . $location . " " . $text . " " . var_export($value, true), 3, $directory . 'my-errors.log');
+            else
+                error_log("\n=>" . $location . " " . $text, 3, $directory . 'my-errors.log');
+        }
+    }
+
 }
 
 
