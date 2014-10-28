@@ -77,7 +77,6 @@ App::down(function()
 |Returns a custom 404 view whenever 404 exceptions is thrown by laravel.
 |
 */
-
 App::missing(function($exception)
 {
     return Response::view('home.404');
