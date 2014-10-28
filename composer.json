@@ -10,7 +10,8 @@
         "mews/captcha": "dev-master",
 		"hybridauth/hybridauth": "*",
 		"frozennode/administrator": "dev-master",
-		"intervention/image": "1.5.1"
+		"intervention/image": "1.5.1",
+		"liebig/cron": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

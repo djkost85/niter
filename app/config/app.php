@@ -143,6 +143,7 @@ return array(
 		'Mews\Captcha\CaptchaServiceProvider',
 		'Frozennode\Administrator\AdministratorServiceProvider',
 		'Intervention\Image\ImageServiceProvider',
+		'Liebig\Cron\CronServiceProvider',
 ),
 
 	/*

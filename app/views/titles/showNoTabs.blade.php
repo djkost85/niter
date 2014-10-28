@@ -51,7 +51,7 @@
 @stop
 
 @section('content')
-    <div class="main-content row">
+    <div itemscope itemtype="http://schema.org/Movie" class="main-content row">
         @if($ad = $options->getHomeJumboAd())
             <div class="row ads-row">
                 {{ $ad }}
@@ -78,12 +78,12 @@
         <div class="main jumbotron row mobile-only col-xs-12" style="background-image: url({{{ asset($data->getBackground()) }}});">
             <div class="poster">
                 <figure class="home-trailer-poster" >
-                    <a href="#"><img title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>                           
+                    <a href="#"><img itemprop="image" title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>                           
                 </figure>
                 @if ($data->getRating())
                     <div class="ratings">
                         @if($data->getTmdbRating())
-                            <div>{{ 'IMDb - ' . "<strong>{$data->getTmdbRating()}</strong>" . '/10'}}</div>
+                            <div>{{ 'TMDb - ' . "<strong>{$data->getTmdbRating()}</strong>" . '/10'}}</div>
                         @endif
                         @if($data->getMcRating())
                             <div>{{ 'Metacritic - ' . "<strong>{$data->getMcRating()}</strong>" . '/10' }}</div>
@@ -124,10 +124,10 @@
                 @if ($data->getRating())
                     <div class="ratings">
                         @if($data->getTmdbRating())
-                            <div>{{ 'Metacritic - ' . "<strong>{$data->getTmdbRating()}</strong>" . '/10'}}</div>
+                            <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><span itemprop="ratingValue">{{ 'TMDB - ' . "<strong>{$data->getTmdbRating()}</strong>" . '/10'}}</span></div>
                         @endif
                         @if($data->getMcRating())
-                            <div>{{ 'IMDB - ' . "<strong>{$data->getMcRating()}</strong>" . '/10' }}</div>
+                            <div>{{ 'Metacritic - ' . "<strong>{$data->getMcRating()}</strong>" . '/10' }}</div>
                         @endif
                         @if($data->getImdbRating())
                             <div>{{ 'IMDB - ' . "<strong>{$data->getImdbRating()}</strong>" . '/10'}}</div>
@@ -137,7 +137,7 @@
             </div>
             <div class="detailed-information row">
                 <div class="title row">
-                    <a href="{{ Helpers::url($data->getTitle(), $data->getId(), $data->getType()) }}" class="title-title">{{ $data->getTitle() . ' (' . DateTime::createFromFormat("Y-m-d", $data->getReleaseDate())->format("Y") . ')'}}</a>
+                    <a href="{{ Helpers::url($data->getTitle(), $data->getId(), $data->getType()) }}" class="title-title"><span itemprop="name">{{ $data->getTitle() . ' (' . DateTime::createFromFormat("Y-m-d", $data->getReleaseDate())->format("Y") . ')'}}</span></a>
                 </div>
                 <div class="title-info row">
                     @if ($data->getRuntime())
@@ -173,7 +173,7 @@
                             <dt>{{ trans('main.directors') }}:</dt>
                             <dd>
                                 @foreach($directors as $s)
-                                    <strong><a href="{{ Helpers::url($s['name'], $s['id'], 'director') }}">{{{ $s['name'] }}},</a></strong>
+                                    <strong><a href="{{ Helpers::url($s['name'], $s['id'], 'director') }}"><span itemprop="director" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{{ $s['name'] }}},</span></span></a></strong>
                                 @endforeach
                             </dd>
                         @endif
@@ -187,7 +187,8 @@
                         @endif
                         @if ($stars = array_slice($data->getCast(), 0, 7))
                             <dt>{{ trans('main.stars') }}:</dt>
-                            <dd>
+                            <span itemprop="actor" itemscope itemtype="http://schema.org/Person">
+                            <dd itemprop="name">
                             @foreach($stars as $s)
                                 <strong><a href="{{ Helpers::url($s['name'], $s['id'], 'people') }}">{{{ $s['name'] }}}</a>,</strong>
                             @endforeach
