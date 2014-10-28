@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pluginlist loading="Cargando video, por favor espere...">
+    <plugins url="gkplugins_movreel.swf"/>
+    <plugins url="gkplugins_upafile.swf"/>
+    <plugins url="gkplugins_videomegatv.swf"/>
+    <plugins url="gkplugins_cramitin.swf"/>
+    <plugins url="gkplugins_vidbux.swf"/>
+    <plugins url="gkplugins_filebox.swf"/>
+    <plugins url="gkplugins_donevideo.swf"/>
+    <plugins url="gkplugins_bitshare.swf"/>
+    <plugins url="gkplugins_bayfiles.swf"/>
+    <plugins url="gkplugins_upafile.swf"/>
+    <plugins url="gkplugins_epicshare.swf"/>
+    <plugins url="gkplugins_megareleaseorg.swf"/>
+</pluginlist>

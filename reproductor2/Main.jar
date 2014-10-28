@@ -1,0 +1,659 @@
+
+package myPackage;
+
+import java.io.PrintStream;
+import java.net.URL;
+import java.security.AccessController;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JApplet;
+import netscape.javascript.JSObject;
+
+public class Main extends JApplet
+{
+
+    public Main()
+    {
+        postParams = new HashMap();
+        hotMap = new HashMap();
+    }
+
+    public void init()
+    {
+        mainWindow = JSObject.getWindow(this);
+        domain = getCodeBase().getHost();
+        if(!domain.contains("www.cuevanahd.tv"))
+            return;
+        super.init();
+        fileId = getParameter("megaId");
+        uaParam = getParameter("ua");
+        fileSite = getParameter("fileSite");
+        skipRecaptchaResponse = getParameter("skipRecaptchaResponse");
+        if(fileSite.equals("megaupload"))
+        {
+            getMegauploadLink();
+            return;
+        }
+        if(fileSite.equals("glumbo"))
+        {
+            getGlumboLink();
+            return;
+        }
+        if(fileSite.equals("bitshare"))
+        {
+            getBitshareLink();
+            return;
+        }
+        if(fileSite.equals("filefactory"))
+        {
+            getFilefactoryLink();
+            return;
+        }
+        if(fileSite.equals("hotfile"))
+        {
+            getHotfileLink();
+            return;
+        }
+        if(fileSite.equals("wupload"))
+        {
+            getWuploadLink();
+            return;
+        }
+        if(fileSite.equals("megaporn"))
+        {
+            getMegapornLink();
+            return;
+        }
+        if(fileSite.equals("uploadhere"))
+        {
+            getUploadhereLink();
+            return;
+        }
+        if(fileSite.equals("uploadking"))
+        {
+            getUploadkingLink();
+            return;
+        }
+        try
+        {
+            if(fileSite.equals("bayfiles"))
+            {
+                getBayfilesLink();
+                return;
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return;
+    }
+
+    private void getBayfilesLink()
+    {
+        Date time = new Date();
+        url = (new StringBuilder("http://www.bayfiles.com/file/")).append(fileId).toString();
+        String pageSource = urlByGet();
+        link = extractFirstMatch(pageSource, bayIdPattern);
+        String delay = extractFirstMatch(pageSource, bayDelayPattern);
+        url = (new StringBuilder("http://bayfiles.com/ajax_download?_=")).append(time.getTime()).append("&action=startTimer&vfid=").append(link).toString();
+        pageSource = urlByGet();
+        ajaxId = extractFirstMatch(pageSource, bayTokenPattern);
+        mainWindow.eval((new StringBuilder("setCounter('")).append(delay).append("');").toString());
+    }
+
+    public void bayfilesAlmostThere()
+    {
+        postParams.clear();
+        postParams.put("action", "getLink");
+        postParams.put("vfid", link);
+        postParams.put("token", ajaxId);
+        url = "http://bayfiles.com/ajax_download";
+        String pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, bayLinkPattern);
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getUploadkingLink()
+    {
+        url = (new StringBuilder("http://www.uploadking.com/")).append(fileId).toString();
+        String pageSource = urlByGet();
+        captchaKey = extractFirstMatch(pageSource, wupRecaptchaPattern);
+        if(captchaKey.isEmpty())
+        {
+            mainWindow.eval("errorBorrado();");
+            return;
+        }
+        String count = extractFirstMatch(pageSource, megaCountPattern);
+        if(count.isEmpty())
+            count = "5";
+        mainWindow.eval((new StringBuilder("setCounter('")).append(count).append("');").toString());
+    }
+
+    private void getUploadhereLink()
+    {
+        url = (new StringBuilder("http://www.uploadhere.com/")).append(fileId).toString();
+        String pageSource = urlByGet();
+        captchaKey = extractFirstMatch(pageSource, wupRecaptchaPattern);
+        if(captchaKey.isEmpty())
+        {
+            mainWindow.eval("errorBorrado();");
+            return;
+        }
+        String count = extractFirstMatch(pageSource, megaCountPattern);
+        if(count.isEmpty())
+            count = "5";
+        mainWindow.eval((new StringBuilder("setCounter('")).append(count).append("');").toString());
+    }
+
+    private void hereKingAlmostThere()
+    {
+        getCaptchainfo();
+    }
+
+    private void hereKingSendCaptcha(String solution)
+    {
+        if(fileSite.equals("uploadhere"))
+            url = (new StringBuilder("http://www.uploadhere.com/")).append(fileId).append("?c=").append(fileId).toString();
+        else
+        if(fileSite.equals("uploadking"))
+            url = (new StringBuilder("http://www.uploadking.com/")).append(fileId).append("?c=").append(fileId).toString();
+        postParams.clear();
+        postParams.put("recaptcha_challenge_field", recaptchaChallenge);
+        postParams.put("recaptcha_response_field", solution);
+        String pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, uploadhereLinkPattern);
+        if(!link.isEmpty())
+            mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+        else
+            getCaptchainfo();
+    }
+
+    private void getGlumboLink()
+    {
+        url = (new StringBuilder("http://uploads.glumbo.com/")).append(fileId).toString();
+        String pageSource = urlByGet();
+        hotMap = extracToMap(pageSource, glumboFirstPattern);
+        postParams.clear();
+        postParams.put("op", "download1");
+        postParams.put("usr_login", (String)hotMap.get("usr_login"));
+        postParams.put("id", (String)hotMap.get("id"));
+        postParams.put("fname", (String)hotMap.get("fname"));
+        postParams.put("referer", (String)hotMap.get("referer"));
+        postParams.put("method_free", "Liberta Descarga");
+        pageSource = urlByPost();
+        hotMap = extracToMap(pageSource, glumboFirstPattern);
+        postParams.clear();
+        postParams.put("op", "download2");
+        postParams.put("id", (String)hotMap.get("id"));
+        postParams.put("rand", (String)hotMap.get("rand"));
+        postParams.put("referer", (String)hotMap.get("referer"));
+        postParams.put("method_free", (String)hotMap.get("method_free"));
+        postParams.put("method_premium", (String)hotMap.get("method_premium"));
+        postParams.put("down_direct", (String)hotMap.get("down_direct"));
+        pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, glumboLinkPattern);
+        if(!link.isEmpty())
+            mainWindow.eval("setCounter('10');");
+        else
+            mainWindow.eval("errorBorrado();");
+    }
+
+    private void glumboAlmostThere()
+    {
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getBitshareLink()
+        throws InterruptedException
+    {
+        url = (new StringBuilder("http://bitshare.com/?f=")).append(fileId).toString();
+        String pageSource = urlByGet();
+        ajaxId = extractFirstMatch(pageSource, bsAjaxIdPattern);
+        captchaKey = extractFirstMatch(pageSource, bsKeyPattern);
+        url = (new StringBuilder("http://bitshare.com/files-ajax/")).append(fileId).append("/request.html").toString();
+        postParams.clear();
+        postParams.put("request", "generateID");
+        postParams.put("ajaxid", ajaxId);
+        pageSource = urlByPost();
+        String strTime = extractFirstMatch(pageSource, bsTimePattern);
+        mainWindow.eval((new StringBuilder("setCounter('")).append(strTime).append("');").toString());
+    }
+
+    private void bitshareAlmostThere()
+    {
+        if(captchaKey.isEmpty())
+            getBitshareRealLink();
+        else
+            getCaptchainfo();
+    }
+
+    public void bitshareSendCaptcha(String captchaSolution)
+    {
+        url = (new StringBuilder("http://bitshare.com/files-ajax/")).append(fileId).append("/request.html").toString();
+        postParams.clear();
+        postParams.put("request", "validateCaptcha");
+        postParams.put("ajaxid", ajaxId);
+        postParams.put("recaptcha_challenge_field", recaptchaChallenge);
+        postParams.put("recaptcha_response_field", captchaSolution);
+        String pageSource = urlByPost();
+        Boolean flag = Boolean.valueOf(Boolean.parseBoolean(skipRecaptchaResponse));
+        if(pageSource.contains("ERROR") && !flag.booleanValue())
+        {
+            getCaptchainfo();
+            return;
+        }
+        if(pageSource.trim().equals("SUCCESS") || flag.booleanValue())
+        {
+            getBitshareRealLink();
+            return;
+        } else
+        {
+            return;
+        }
+    }
+
+    private void getBitshareRealLink()
+    {
+        url = (new StringBuilder("http://bitshare.com/files-ajax/")).append(fileId).append("/request.html").toString();
+        postParams.clear();
+        postParams.put("request", "getDownloadURL");
+        postParams.put("ajaxid", ajaxId);
+        String pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, bsLinkPattern);
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getMegauploadLink()
+    {
+        url = (new StringBuilder("http://www.megaupload.com/?d=")).append(fileId).toString();
+        String pageSource = urlByGet();
+        link = extractFirstMatch(pageSource, megaLinkPattern);
+        String count = extractFirstMatch(pageSource, megaCountPattern);
+        if(link.isEmpty())
+        {
+            mainWindow.eval("errorBorrado();");
+        } else
+        {
+            if(count.isEmpty())
+                count = "0";
+            mainWindow.eval((new StringBuilder("setCounter('")).append(count).append("');").toString());
+        }
+    }
+
+    private void megauploadAlmostThere()
+    {
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getMegapornLink()
+    {
+        url = (new StringBuilder("http://www.cum.com/?d=")).append(fileId).toString();
+        String pageSource = urlByGet();
+        link = extractFirstMatch(pageSource, cumPattern);
+        String count = extractFirstMatch(pageSource, megaCountPattern);
+        if(link.isEmpty())
+        {
+            mainWindow.eval("errorBorrado();");
+        } else
+        {
+            if(count.isEmpty())
+                count = "0";
+            mainWindow.eval((new StringBuilder("setCounter('")).append(count).append("');").toString());
+        }
+    }
+
+    private void megapornAlmostThere()
+    {
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getWuploadLink()
+    {
+        url = "http://www.wupload.com";
+        Map headers = getHeaders();
+        fileDomain = headers.containsKey("Location") ? (String)((List)headers.get("Location")).get(0) : "http://www.wupload.com/";
+        if(headers.containsKey("Location") && ((String)((List)headers.get("Location")).get(0)).contains("file-manager"))
+        {
+            link = (new StringBuilder("http://www.wupload.com/file/")).append(fileId).toString();
+            mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+            return;
+        }
+        url = (new StringBuilder(String.valueOf(fileDomain))).append("file/").append(fileId).append("?start=1").toString();
+        System.out.println(url);
+        String pageSource = urlByPost();
+        if(pageSource.trim().equals("bad hash"))
+        {
+            link = (new StringBuilder(String.valueOf(fileDomain))).append("file/").append(fileId).toString();
+            mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+            return;
+        }
+        String count = extractFirstMatch(pageSource, wupTimePattern);
+        if(!count.isEmpty())
+        {
+            hotMap = extracToMap(pageSource, wupMapPattern);
+            mainWindow.eval((new StringBuilder("setCounter('")).append(count).append("');").toString());
+        } else
+        {
+            captchaKey = extractFirstMatch(pageSource, wupRecaptchaPattern);
+            if(!captchaKey.isEmpty())
+            {
+                getCaptchainfo();
+            } else
+            {
+                link = extractFirstMatch(pageSource, wupLinkPattern);
+                if(!link.isEmpty())
+                    mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+                else
+                    mainWindow.eval("errorBorrado();");
+            }
+        }
+    }
+
+    private void wuploadAlmostThere()
+    {
+        url = (new StringBuilder(String.valueOf(fileDomain))).append("file/").append(fileId).append("?start=1").toString();
+        postParams.clear();
+        postParams.put("tm", (String)hotMap.get("tm"));
+        postParams.put("tm_hash", (String)hotMap.get("tm_hash"));
+        String pageSource = urlByPost();
+        captchaKey = extractFirstMatch(pageSource, wupRecaptchaPattern);
+        if(captchaKey.isEmpty())
+            captchaKey = "6LdNWbsSAAAAAIMksu-X7f5VgYy8bZiiJzlP83Rl";
+        getCaptchainfo();
+    }
+
+    private void wuploadSendCaptcha(String solution)
+    {
+        url = (new StringBuilder(String.valueOf(fileDomain))).append("file/").append(fileId).append("?start=1").toString();
+        postParams.clear();
+        postParams.put("recaptcha_challenge_field", recaptchaChallenge);
+        postParams.put("recaptcha_response_field", solution);
+        String pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, wupLinkPattern);
+        if(!link.isEmpty())
+            mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+        else
+            getCaptchainfo();
+    }
+
+    private void getFilefactoryLink()
+    {
+        url = (new StringBuilder("http://www.filefactory.com/file/")).append(fileId).toString();
+        String pageSource = urlByGet();
+        ajaxId = extractFirstMatch(pageSource, fileFactoryCheckPattern);
+        captchaKey = extractFirstMatch(pageSource, fileFactoryKeyPattern);
+        if(!captchaKey.isEmpty())
+            getCaptchainfo();
+        else
+            mainWindow.eval("errorBorrado();");
+    }
+
+    private void filefactorySendCaptcha(String solution)
+    {
+        url = "http://www.filefactory.com/file/checkCaptcha.php";
+        postParams.clear();
+        postParams.put("check", ajaxId);
+        postParams.put("recaptcha_challenge_field", recaptchaChallenge);
+        postParams.put("recaptcha_response_field", solution);
+        postParams.put("recaptcha_shortencode_field", "undefined");
+        String pageSource = urlByPost();
+        Boolean flag = Boolean.valueOf(Boolean.parseBoolean(skipRecaptchaResponse));
+        if(pageSource.contains("fail") && !flag.booleanValue())
+        {
+            getCaptchainfo();
+            return;
+        }
+        if(pageSource.trim().contains("path") || flag.booleanValue())
+        {
+            String path = extractFirstMatch(pageSource, fileFactoryPathPattern);
+            url = (new StringBuilder("http://www.filefactory.com")).append(path).toString();
+            pageSource = urlByGet();
+            String wait = extractFirstMatch(pageSource, fileFactoryWaitPattern);
+            link = extractFirstMatch(pageSource, fileFactoryLinkPattern);
+            if(link.isEmpty())
+                link = extractFirstMatch(pageSource, fileFactoryLinkPattern2);
+            mainWindow.eval((new StringBuilder("setCounter('")).append(wait).append("');").toString());
+            return;
+        } else
+        {
+            return;
+        }
+    }
+
+    private void filefactoryAlmostThere()
+    {
+        mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+    }
+
+    private void getHotfileLink()
+    {
+        url = (new StringBuilder("http://hotfile.com/dl/")).append(fileId).append("/").toString();
+        String pageSource = urlByGet();
+        hotMap = extracToMap(pageSource, hotPattern);
+        mainWindow.eval((new StringBuilder("setCounter('")).append((String)hotMap.get("wait")).append("');").toString());
+    }
+
+    private void hotfileAlmostThere()
+    {
+        url = (new StringBuilder("http://hotfile.com/dl/")).append(fileId).append("/").toString();
+        postParams.clear();
+        postParams.put("action", "capt");
+        postParams.put("tm", (String)hotMap.get("tm"));
+        postParams.put("tmhash", (String)hotMap.get("tmhash"));
+        postParams.put("wait", (String)hotMap.get("wait"));
+        postParams.put("waithash", (String)hotMap.get("waithash"));
+        postParams.put("upidhash", (String)hotMap.get("upidhash"));
+        String pageSource = urlByPost();
+        captchaKey = extractFirstMatch(pageSource, bsKeyPattern);
+        if(captchaKey.isEmpty())
+            captchaKey = "6LfRJwkAAAAAAGmA3mAiAcAsRsWvfkBijaZWEvkD";
+        getCaptchainfo();
+    }
+
+    private void hotfileSendCaptcha(String solution)
+    {
+        url = (new StringBuilder("http://hotfile.com/dl/")).append(fileId).append("/").toString();
+        postParams.clear();
+        postParams.put("action", "checkcaptcha");
+        postParams.put("recaptcha_challenge_field", recaptchaChallenge);
+        postParams.put("recaptcha_response_field", solution);
+        String pageSource = urlByPost();
+        link = extractFirstMatch(pageSource, hotLinkPattern);
+        if(!link.isEmpty())
+            mainWindow.eval((new StringBuilder("showLink('")).append(link).append("');").toString());
+        else
+            getHotfileLink();
+    }
+
+    public void almostThere()
+    {
+        if(fileSite.equals("megaupload"))
+        {
+            megauploadAlmostThere();
+            return;
+        }
+        if(fileSite.equals("uploadhere") || fileSite.equals("uploadking"))
+        {
+            hereKingAlmostThere();
+            return;
+        }
+        if(fileSite.equals("bitshare"))
+        {
+            bitshareAlmostThere();
+            return;
+        }
+        if(fileSite.equals("filefactory"))
+        {
+            filefactoryAlmostThere();
+            return;
+        }
+        if(fileSite.equals("hotfile"))
+        {
+            hotfileAlmostThere();
+            return;
+        }
+        if(fileSite.equals("wupload"))
+        {
+            wuploadAlmostThere();
+            return;
+        }
+        if(fileSite.equals("megaporn"))
+        {
+            megapornAlmostThere();
+            return;
+        }
+        if(fileSite.equals("glumbo"))
+        {
+            glumboAlmostThere();
+            return;
+        }
+        if(fileSite.equals("bayfiles"))
+        {
+            bayfilesAlmostThere();
+            return;
+        } else
+        {
+            return;
+        }
+    }
+
+    private void getCaptchainfo()
+    {
+        url = (new StringBuilder("http://www.google.com/recaptcha/api/challenge?k=")).append(captchaKey).toString();
+        String pageSource = urlByGet();
+        recaptchaChallenge = extractFirstMatch(pageSource, fileFactoryChallengePattern);
+        String img = (new StringBuilder("image?c=")).append(recaptchaChallenge).toString();
+        mainWindow.eval((new StringBuilder("showImg('")).append(img).append("');").toString());
+    }
+
+    public void sendCaptcha(String solution)
+    {
+        if(fileSite.equals("bitshare"))
+        {
+            bitshareSendCaptcha(solution);
+            return;
+        }
+        if(fileSite.equals("filefactory"))
+        {
+            filefactorySendCaptcha(solution);
+            return;
+        }
+        if(fileSite.equals("hotfile"))
+        {
+            hotfileSendCaptcha(solution);
+            return;
+        }
+        if(fileSite.equals("wupload"))
+        {
+            wuploadSendCaptcha(solution);
+            return;
+        }
+        if(fileSite.equals("uploadhere") || fileSite.equals("uploadking"))
+        {
+            hereKingSendCaptcha(solution);
+            return;
+        } else
+        {
+            return;
+        }
+    }
+
+    public String urlByPost()
+    {
+        AccessController.doPrivileged(new  Object()     /* anonymous class not found */
+    class _anm1 {}
+
+);
+        return output.trim();
+    }
+
+    public String urlByGet()
+    {
+        AccessController.doPrivileged(new  Object()     /* anonymous class not found */
+    class _anm2 {}
+
+);
+        return output.trim();
+    }
+
+    public Map getHeaders()
+    {
+        AccessController.doPrivileged(new  Object()     /* anonymous class not found */
+    class _anm3 {}
+
+);
+        return returnedHeaders;
+    }
+
+    private String extractFirstMatch(String input, Pattern pattern)
+    {
+        if(input != null)
+        {
+            Matcher match = pattern.matcher(input);
+            if(match.find())
+                return match.group(1).trim();
+        }
+        return "";
+    }
+
+    private static Map extracToMap(String code, Pattern newPattern)
+    {
+        if(code != null)
+        {
+            Map reslutInfo = new HashMap();
+            for(Matcher matcherInfo = newPattern.matcher(code); matcherInfo.find(); reslutInfo.put(matcherInfo.group(1).trim(), matcherInfo.group(2).trim()));
+            return reslutInfo;
+        } else
+        {
+            return null;
+        }
+    }
+
+    private static final long serialVersionUID = 1L;
+    public String fileDomain;
+    public String domain;
+    public String fileId;
+    public String uaParam;
+    public String fileSite;
+    public String url;
+    public String output;
+    public String ajaxId;
+    public String recaptchaChallenge;
+    public String skipRecaptchaResponse;
+    public String link;
+    public String captchaKey;
+    public Map postParams;
+    public Map hotMap;
+    public Map returnedHeaders;
+    public JSObject mainWindow;
+    private static final Pattern megaCountPattern = Pattern.compile("<script[^>]*>\\s*count\\s*=\\s*(\\d+)", 34);
+    private static final Pattern megaLinkPattern = Pattern.compile("<a[^>]*href=\"(http[^\"]*)\"[^>]*class=\"download(?:(?:_premium_but)|(?:_regular_usual))\"[^>]*>", 34);
+    private static final Pattern cumPattern = Pattern.compile("<div[^>]*class=\"down_butt[^\"]*\"[^>]*>\\s*<a[^>]*href=\"(http[^\"]*)\"[^>]*>", 34);
+    private static final Pattern bsLinkPattern = Pattern.compile("success#(.*?)$", 34);
+    private static final Pattern bsAjaxIdPattern = Pattern.compile("var\\s*ajaxdl\\s*=\\s*\"([^\"]*)\"", 34);
+    private static final Pattern bsTimePattern = Pattern.compile("file:([^:]*):\\d*", 34);
+    private static final Pattern bsKeyPattern = Pattern.compile("<noscript>\\s*<iframe[^>]*src=\"[^\"]*k=([^\"]*)\"[^>]*>", 34);
+    private static final Pattern fileFactoryKeyPattern = Pattern.compile("recaptcha.create\\(\"([^\"]*)\"", 34);
+    private static final Pattern fileFactoryCheckPattern = Pattern.compile("check\\s*:'([^']*)'", 34);
+    private static final Pattern fileFactoryChallengePattern = Pattern.compile("challenge\\s*:\\s*'([^']*)'", 34);
+    private static final Pattern fileFactoryPathPattern = Pattern.compile("path\\s*:\\s*\"([^\"]*)\"", 34);
+    private static final Pattern fileFactoryWaitPattern = Pattern.compile("<input[^>]*id=\"startWait\"[^>]*value=\"([^\"]*)\"[^>]*>", 34);
+    private static final Pattern fileFactoryLinkPattern = Pattern.compile("<div[^>]*id=\"downloadLink\"[^>]*>\\s*<a[^>]*href=\"([^\"]*)\"[^>]*>", 34);
+    private static final Pattern fileFactoryLinkPattern2 = Pattern.compile("<a[^>]*href=\"([^\"]*)\"\\s*id=\"downloadLinkTarget\"[^>]*>", 34);
+    private static final Pattern hotPattern = Pattern.compile("<input[^>]*name=([^\\s]*)\\s*value=([^>\\s*]*)[^>]*>", 34);
+    private static final Pattern hotLinkPattern = Pattern.compile("<a[^>]*href=\"([^\"]*)\"[^>]*class=\"click_download\"[^>]*>", 34);
+    private static final Pattern wupTimePattern = Pattern.compile("countDownDelay\\s*=\\s*(\\d+)", 34);
+    private static final Pattern wupMapPattern = Pattern.compile("<input[^>]*name='([^']*)'[^>]*value='([^']*)'[^>]*>", 34);
+    private static final Pattern wupRecaptchaPattern = Pattern.compile("recaptcha.create\\(\"([^\"]*)\"", 34);
+    private static final Pattern wupLinkPattern = Pattern.compile("<div[^>]*id=\"downloadlink\"[^>]*>.*?<a[^>]*href=\"(http[^\"]*)\"[^>]*>", 34);
+    private static final Pattern glumboFirstPattern = Pattern.compile("<input[^>]*\"hidden\"[^>]*name=\"([^\"]*)\"[^>]*value=\"([^\"]*)\"[^>]*", 34);
+    private static final Pattern glumboLinkPattern = Pattern.compile("your\\s*ip[^<*]*(?:<[^>]*>\\s*)*<a[^>]*href=\"([^\"]*)\"[^>]*>", 34);
+    private static final Pattern uploadhereLinkPattern = Pattern.compile("\"href\":\"([^\"]*)\"", 34);
+    private static final Pattern bayIdPattern = Pattern.compile("var\\s*vfid\\s*=\\s*([^;]*);\\s*var\\s*delay\\s*=\\s*[^;]*;", 34);
+    private static final Pattern bayDelayPattern = Pattern.compile("var\\s*vfid\\s*=\\s*[^;]*;\\s*var\\s*delay\\s*=\\s*([^;]*);", 34);
+    private static final Pattern bayTokenPattern = Pattern.compile("\"token\"\\s*:\\s*\"([^\"]*)\"", 34);
+    private static final Pattern bayLinkPattern = Pattern.compile("onclick=\".*?=\\s*'([^']*)'", 34);
+
+}

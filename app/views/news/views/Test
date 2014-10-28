@@ -1,0 +1,247 @@
+
+
+
+<!--         <div class="jumbotron title" style="height:940px; background-image: url({{{ asset($data->getBackground()) }}})">
+            <div class="transparent" style="height:940px;background-color: rgba(24, 24, 24, 0.70);">
+                <div class="row title-jumbo-row">
+                    <a href="{{ Helpers::url($data->getTitle(), $data->getId(), $data->getType()) }}" class="col-sm-2 hidden-xs hidden-sm title-poster">
+                        <img class="img-posts" style="max-width:122%;margin-top:5px;" src="{{{ asset($data->getPoster()) }}}" alt="{{{ $data->getTitle() }}}">
+                    </a>
+                    <div id="dataId" class="invisible">{{$data->getId()}}</div>
+                    <div class="col-sm-12 col-md-10">
+                        <div class="row" style="margin-left:30px;">
+                            <a href="{{ Helpers::url($data->getTitle(), $data->getId(), $data->getType()) }}" class="title-title">{{{ $data->getTitle() }}}</a>
+                        </div>
+                        <div class="row title-info" style="margin-left:30px">
+                            @if ($data->getRuntime())
+                                <span>{{ $data->getRuntime() . ' ' . trans('main.min')}}</span> - 
+                            @endif
+                            @if ($data->getGenre())
+                                <span style="font-family:'Lato';color:#9FBABB;">{{ $data->getGenre() }}</span> - 
+                            @endif
+                            @if ($data->getReleasedate())
+                                <span>{{{ $data->getReleasedate() }}}</span>
+                            @endif
+                        </div>
+
+                        <div class="row" style="margin-left:30px">
+                            <button type="button" class="btn trans-button trailer-trigger" data-trailer="{{{ $data->getTrailer() }}}">
+                                <span><i class="fa fa-play"></i> {{ trans('main.play trailer') }}</span>
+                            </button>
+                            <div class="title-list-btns" style="margin-left:-0px">
+                                @include('Partials.TitleListButtons')
+                            </div>
+                        </div>
+
+
+
+                        <div class="row title-plot" style="margin-left:30px">
+                            <dl class="dl-horizontal title-desc-crew" style="margin-top:-45px;">
+                            <div class="title-dt-group">
+                            @if ($directors = array_slice($data->getDirectors(), 0, 5))
+
+                            <dt style="font-family:sans-serif;font-weight:bold">{{ trans('main.directors') }}:</dt>
+                            <dd>
+                            @foreach($directors as $s)
+                                                  <strong><a href="{{ Helpers::url($s['name'], $s['id'], 'director') }}">{{{ $s['name'] }}}</a>,</strong>
+                            @endforeach
+                            </dd>
+
+                            @endif
+                            </div>
+
+                            <div class="title-dt-group">
+                            @if ($writers = $data->getWriters())
+
+                            <dt style="font-family:sans-serif;font-weight:bold">{{ trans('main.writing') }}:</dt>
+                            <dd>
+                            @foreach($writers as $w)
+                            {{{ $w['name'] }}}, 
+
+                            @endforeach
+                            </dd>
+
+
+                            @endif
+                            </div>
+
+                            <div class="title-dt-group">
+                            @if ($stars = array_slice($data->getCast(), 0, 7))
+
+                            <dt style="font-family:sans-serif;font-weight:bold">{{ trans('main.stars') }}:</dt>
+                            <dd>
+                            @foreach($stars as $s)
+                            <strong><a href="{{ Helpers::url($s['name'], $s['id'], 'people') }}">{{{ $s['name'] }}}</a>,</strong>
+                            @endforeach
+                            </dd>
+
+                            @endif
+                            </div>
+
+                            @if ($country = $data->getCountry())
+                            <div class="title-dt-group">
+                            <dt style="font-family:sans-serif;font-weight:bold">{{ trans('main.country') }}:</dt>
+                            <dd>{{{ $country }}}</dd>       
+                            </div>
+                            @endif
+
+                            @if ($language = $data->getLanguage())
+                            <div class="title-dt-group">
+                            <dt style="font-family:sans-serif;font-weight:bold">{{ trans('main.lang') }}:</dt>
+                            <dd>{{{ $language }}}</dd>        
+                            </div>
+                            @endif
+
+                            </dl>
+                            <div style="margin-top:-10px">
+                            <b>Synopsis:&nbsp;</b>&nbsp;{{{ $data->getPlot() }}}
+                            </div>
+                            </div>
+                            <div class="row no-mar-right" id="title-votes-row">
+                            <div class="col-sm-6 title-seasons">
+
+                            @if ($data->getType() == 'series')
+
+                            {{ trans('main.seasons') }}:           
+
+                            @foreach ($data->getSeasons() as $v)
+
+                            @if ($v->number == Request::segment(4))
+
+                            <a href="{{ Helpers::season($data->getTitle(), $v) }}" class="active">{{{ $v->number }}}</a> |
+
+                            @else
+
+                            <a href="{{ Helpers::season($data->getTitle(), $v) }}">{{{ $v->number }}}</a> |
+
+                            @endif
+
+                            @endforeach
+
+                            @if (Helpers::hasAccess('titles.create'))
+
+                            <a class="title-new-s" href="{{ Helpers::url($data->getTitle(), $data->getId(), 'series') . '/seasons/create'}}">{{ trans('main.new') }}</a>
+
+                            @endif
+
+                            @endif
+                            </div>
+
+
+
+
+
+
+
+
+                            </div>
+                            </div>
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@section('bodytag')
+  <body class="nav-trans animate-nav" data-url="{{ url() }}">
+@stop
+  
+@section('content')
+  @include('Titles.Themes.NoTabs.Jumbotron')
+  <section class="container push-footer-wrapper">
+
+    <div class="yt-modal-box"></div> 
+
+    <div class="row ads-row">
+          @if($ad = $options->getTitleJumboAd())
+              {{ $ad }}
+          @endif
+    </div>
+
+    <div class="row responses"> @include('Partials.Response') </div>
+
+    
+
+
+
+
+
+
+      
+    {{--adapt the view based on if we have critic reviews or not--}}
+    <div class="row">
+
+      @if ( !! $data->getCriticReviews() )
+
+        @include('Titles.Themes.NoTabs.HasCriticReviewsContent')
+
+      @else
+
+        @include('Titles.Themes.NoTabs.NoCriticReviewsContent')
+
+      @endif
+
+    </div>
+    
+  <div class="push"></div>
+  </section>{{--container--}}
+
+<div class="modal fade animated fadeInBig" id="img-modal">
+  <div class="modal-dialog"><div class="modal-content"><div class="modal-body"></div></div></div>
+</div>
+
+
+@if (isset($disqus))
+
+  <section class="container disqus">
+    <div class="bordered-heading"><span class="text-border-top"><i class="fa fa-comments"></i> {{ trans('main.comments') }}</div>
+    <div id="disqus_thread"></div>
+  </section>
+
+  @include('Titles.Partials.Disqus')
+
+@endif
+
+@section('scripts')
+
+ <script>
+
+   //add 0 comments to jumbotron if not already there.
+  (function ($){
+
+    if ( ! $('.disqus-link').text().trim().length)
+    {
+      $(".disqus-link").text('0 {{ trans("main.comments") }}');
+    }
+
+  })(jQuery);
+
+ </script>
+
+@stop
+
+<noscript>{{ trans('main.enable js') }}</noscript>
+    
+@stop
+
+
+  
+//////////////////
+
+
+
+ -->

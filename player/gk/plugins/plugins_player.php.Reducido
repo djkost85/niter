@@ -1,0 +1,149 @@
+<?php
+
+function Decrypt($sValue, $sSecretKey)
+{
+    return rtrim(
+        mcrypt_decrypt(
+            MCRYPT_RIJNDAEL_256, 
+            $sSecretKey, 
+            base64_decode(hexToStr($sValue)), 
+            MCRYPT_MODE_ECB,
+            mcrypt_create_iv(
+                mcrypt_get_iv_size(
+                    MCRYPT_RIJNDAEL_256,
+                    MCRYPT_MODE_ECB
+                ), 
+                MCRYPT_RAND
+            )
+        ), "\0"
+    );
+}
+function hexToStr($hex)
+{
+    $string='';
+    for ($i=0; $i < strlen($hex)-1; $i+=2)
+    {
+        $string .= chr(hexdec($hex[$i].$hex[$i+1]));
+    }
+    return $string;
+}
+function endsWith($haystack, $needle){
+    $length = strlen($needle);
+    if ($length == 0) {
+        return true;
+    }
+    return (substr($haystack, -$length) === $needle);
+}
+
+$link = $_REQUEST['url'];
+if (endsWith($link,"penc")){
+     $pos = stripos($link, ".com/", 4) + 5;
+     $link = substr($link,0,$pos).Decrypt(substr($link, $pos, -strlen("penc")),"dDeFG34Jr342DDgrL");
+}
+
+
+$useheader = "";
+$useragent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:13.0) Gecko/20100101 Firefox/13.0";
+$referer = "";
+$autoreferer = "";
+$usehttpheader = true;
+$custheader = "";
+$ucookie = "";
+$encoding = "";
+$timeout = "";
+$follow = "";
+$mpost = "";
+$mpostfield = "";
+$proxytunnel ="";
+$proxytype = "";
+$proxyport = "";
+$proxyip = "";
+$sslverify = "true";
+$nobody = "";
+
+function get_curl($url)
+{
+	global $useheader,$useragent,$referer,$autoreferer,$usehttpheader,$custheader,$ucookie,$encoding,$timeout,$follow,$mpost,$mpostfield,$proxytunnel,$proxytype,$proxyport,$proxyip,$sslverify,$nobody;
+	$curl = curl_init();
+	$header[0] = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+	$header[] = "Accept-Language: en-us,en;q=0.5";
+	$header[] = "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7";
+	$header[] = "Keep-Alive: 115";
+	$header[] = "Connection: keep-alive";
+	if($custheader!=""){$header[] = $custheader;}
+	
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	if($useheader=="true"){curl_setopt($curl, CURLOPT_HEADER, 1);}
+	if($useragent!=""){curl_setopt($curl, CURLOPT_USERAGENT, $useragent);}
+	if($usehttpheader=="true"){curl_setopt($curl, CURLOPT_HTTPHEADER, $header);}
+	if($ucookie!=""){curl_setopt($curl, CURLOPT_COOKIE, str_replace('\\"','"',$ucookie));}
+	if($referer!=""){curl_setopt($curl, CURLOPT_REFERER, $referer);}
+	if($autoreferer=="true"){curl_setopt($curl, CURLOPT_AUTOREFERER, 1);}
+	if($encoding!=""){curl_setopt($curl, CURLOPT_ENCODING, $encoding);}
+	if($timeout!=""){curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);}
+	if($follow=="true"){curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);}
+	if($mpost=="true"){curl_setopt($curl, CURLOPT_POST, 1);}
+	if($mpostfield!=""){curl_setopt($curl, CURLOPT_POSTFIELDS, $mpostfield);}
+	if($proxytunnel=="true"){curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);}
+	if($proxytype=="http"){curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);}
+	if($proxyip=="socks5"){curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);}
+	if($proxyport!=""){curl_setopt($curl, CURLOPT_PROXYPORT, $proxyport);}
+	if($proxyip!=""){curl_setopt($curl, CURLOPT_PROXY, $proxyip);}
+	if($nobody=="true"){curl_setopt($curl, CURLOPT_NOBODY, 1);}
+	if($sslverify=="true"){
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0); 
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+	}
+
+	$result = curl_exec($curl);
+	curl_close($curl);
+	return $result;
+}
+
+$text = get_curl($link);
+echo $text;
+die();
+/*
+$pos = strpos($text, "_album.access")+1;
+$text = substr($text,$pos);
+
+$pos = strpos($text, "feedPreload")+1405;
+$text = substr($text,$pos);
+
+
+$text = substr($text,0,3100);
+echo $text;
+die();
+
+":[{"gd$kind":"photos#photo","id":"https://picasaweb.google.com/data/entry/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546","title":"black.mp4","link":[{"rel":"http://schemas.google.com/g/2005#feed","type":"application/atom+xml","href":"https://picasaweb.google.com/data/feed/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546?urlredir=1"},{"rel":"alternate","type":"text/html","href":"https://picasaweb.google.com/116876357297286999471/2013072004#5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#canonical","type":"text/html","href":"https://picasaweb.google.com/lh/photo/67aXFRWzkkTstW56XGo5f9MTjNZETYmyPJy0liipFm0"},{"rel":"self","type":"application/atom+xml","href":"https://picasaweb.google.com/data/entry/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#report","type":"text/html","href":"https://picasaweb.google.com/lh/reportAbuse?uname=116876357297286999471&aid=5902818405780111361&iid=5902818405715234546"}],"gphoto$id":"5902818405715234546","albumId":"5902818405780111361","access":"public","videostatus":"final","width":"720","height":"542","size":"1159655395","commentingEnabled":"true","allowNameTags":"false","streamIds":["shared_group_5895247112419341586","updates"],"media":{"content":[{"url":"https://lh3.googleusercontent.com/-QIEu8Okzmus/UesGEMZLTvI/AAAAAAAAAJM/nfBOFV1eV-U/black.gif","height":386,"width":512,"type":"image/gif"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=5&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377038698&sparams=id,itag,source,ip,ipbits,expire&signature=64285373DE67096C7CE729380B2EDE14FA31A68F.BCBCD67BEE9EFBBBB6E94CE04BF5608756107890&key=lh1","height":240,"width":320,"type":"application/x-shockwave-flash"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=18&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377038698&sparams=id,itag,source,ip,ipbits,expire&signature=1464AD04AD9A49AC668FB4291D5C6B69E1D8A09E.246DEC8C93FEB67AA46A430138B6ED425F9D8BD4&key=lh1","height":360,"width":478,"type":"video/mpeg4"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=34&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377038698&sparams=id,itag,source,ip,ipbits,expire&signature=7D0C6239A8C2AE11BBB5DAC4BF86EDE2B2A979FD.D7D8802C794C0712CFA11ADC1A374EE52DCFFF62&key=lh1","height":360,"width":478,"type":"application/x-shockwave-flash"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=35&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377038698&sparams=id,itag,source,ip,ipbits,expire&signature=30BC8796AE29EA5D4D817641EFDF377095133C42.6E26844DA3B13B00D0579EA381D7BD9FEFC34374&key=lh1","height":480,"width":638,"type":"application/x-shockwave-flash"}],"description":"rocha-black","text":["5,18,34,35"],"thumbnail":[{"url":"https://lh3.googleusercontent.com/-QIEu
+
+":[{"gd$kind":"photos#photo","id":"https://picasaweb.google.com/data/entry/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546","title":"black.mp4","link":[{"rel":"http://schemas.google.com/g/2005#feed","type":"application/atom+xml","href":"https://picasaweb.google.com/data/feed/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546?urlredir=1"},{"rel":"alternate","type":"text/html","href":"https://picasaweb.google.com/116876357297286999471/2013072004#5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#canonical","type":"text/html","href":"https://picasaweb.google.com/lh/photo/67aXFRWzkkTstW56XGo5f9MTjNZETYmyPJy0liipFm0"},{"rel":"self","type":"application/atom+xml","href":"https://picasaweb.google.com/data/entry/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#report","type":"text/html","href":"https://picasaweb.google.com/lh/reportAbuse?uname=116876357297286999471&aid=5902818405780111361&iid=5902818405715234546"}],"gphoto$id":"5902818405715234546","albumId":"5902818405780111361","access":"public","videostatus":"final","width":"720","height":"542","size":"1159655395","commentingEnabled":"true","allowNameTags":"false","streamIds":["shared_group_5895247112419341586","updates"],"media":{"content":"[{"url":"https://lh3.googleusercontent.com/-QIEu8Okzmus/UesGEMZLTvI/AAAAAAAAAJM/nfBOFV1eV-U/black.gif","height":386,"width":512,"type":"image/gif"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=5&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377039317&sparams=id,itag,source,ip,ipbits,expire&signature=289613542637B97189DE658CC99502FDA2745EA0.6C75F202E094DDBE4F081B76376E759A404A4323&key=lh1","height":240,"width":320,"type":"application/x-shockwave-flash"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=18&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377039317&sparams=id,itag,source,ip,ipbits,expire&signature=3422F29AACF5FAAB9AB060BE915B9E442C848585.2425F4D088FAF619CCCCF2F177C5F0A96A8E7B49&key=lh1","height":360,"width":478,"type":"video/mpeg4"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=34&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377039317&sparams=id,itag,source,ip,ipbits,expire&signature=CF4768CEBDFB08769734D819B499086A3B4A2D4.C6FC8B07B300EF0CB798281075C0077A7B0CB2D7&key=lh1","height":360,"width":478,"type":"application/x-shockwave-flash"},{"url":"http://redirector.googlevideo.com/videoplayback?id=ef1ed1fea63f2b95&itag=35&source=picasa&cmo=sensitive_content%3Dyes&ip=0.0.0.0&ipbits=0&expire=1377039317&sparams=id,itag,source,ip,ipbits,expire&signature=84FC39973378843702BF91451FC422027B2BCE49.324A014AF5E935E607C96D29B60E26D1C2A187E4&key=lh1","height":480,"width":638,"type":"application/x-shockwave-flash"}],"description":"rocha-black","text":["5,18,34,35"],"thumbnail":[{"url":"https://lh3.googleusercontent.com/-QIEu 
+
+*/
+
+$pre = '":[{"gd$kind":"photos#photo","id":"https://picasaweb.google.com/data/entry/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546","title":"black.mp4","link":[{"rel":"http://schemas.google.com/g/2005#feed","type":"application/atom+xml","href":"https://picasaweb.google.com/data/feed/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546?urlredir=1"},{"rel":"alternate","type":"text/html","href":"https://picasaweb.google.com/116876357297286999471/2013072004#5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#canonical","type":"text/html","href":"https://picasaweb.google.com/lh/photo/67aXFRWzkkTstW56XGo5f9MTjNZETYmyPJy0liipFm0"},{"rel":"self","type":"application/atom+xml","href":"https://picasaweb.google.com/data/entry/tiny/user/116876357297286999471/albumid/5902818405780111361/photoid/5902818405715234546"},{"rel":"http://schemas.google.com/photos/2007#report","type":"text/html","href":"https://picasaweb.google.com/lh/reportAbuse?uname=116876357297286999471&aid=5902818405780111361&iid=5902818405715234546"}],"gphoto$id":"5902818405715234546","albumId":"5902818405780111361","access":"public","videostatus":"final","width":"720","height":"542","size":"1159655395","commentingEnabled":"true","allowNameTags":"false","streamIds":["shared_group_5895247112419341586","updates"],"media":';
+
+
+
+$pre = '":[{"gd$kind":"photos#photo","link":[{"rel":"alternate","href":"https://picasaweb.google.com/111996672861106063291/2012M0312#5723316952813628130"}],"gphoto$id":"5723316952813628130"],"media":';
+
+$post= ',"description":"rocha-black","thumbnail":[{"url":""';
+
+$pos = strpos($link, "#")+1;
+$ID = substr($link,$pos);
+$pos = strpos($text, "#".$ID);
+if ($pos !== false) {
+    $text = substr( $text,$pos,5000);
+    $pos = strpos($text, "content\":[")+9;
+    if ($pos !== false) {
+        $text = substr( $text,$pos);
+        $pos = strpos($text, "]");
+        if ($pos !== false) {
+            $text = substr( $text,0,$pos);
+            echo $pre.'{"content":'.$text.']'.$post;
+        }
+    }
+}
+
+?> 

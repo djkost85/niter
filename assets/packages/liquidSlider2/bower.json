@@ -1,0 +1,36 @@
+{
+  "name": "liquidSlider2",
+  "version": "2.3.7",
+  "homepage": "http://liquidSlider2.com",
+  "authors": [
+    "Kevin Batdorf <kevin@kevinbatdorf.com>"
+  ],
+  "description": "A Responsive Content Slider",
+  "main": "src/js/jquery.liquid-slider.js",
+  "keywords": [
+    "content",
+    "slider",
+    "tabs",
+    "mobile"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "examples",
+    "node_modules",
+    "bower_components",
+    "src",
+    ".bowerrc",
+    ".gitignore",
+    "bower.json",
+    "Gruntfile.js",
+    "liquidSlider2.jquery.json",
+    "package.json",
+    "README.markdown"
+  ],
+  "dependencies": {
+    "jquery": "~1",
+    "jquery-touchswipe": "~1.6.4",
+    "jquery-easing": "*"
+  },
+  "devDependencies": {}
+}
