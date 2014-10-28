@@ -145,5 +145,4 @@ class SearchController extends BaseController
 		return $this->autocomplete->castTypeahead($query);
 	}
 
-	
 }

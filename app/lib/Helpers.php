@@ -480,7 +480,6 @@ class Helpers
                 error_log("\n=>" . $location . " " . $text, 3, $directory . 'my-errors.log');
         }
     }
-
 }
 
 
