@@ -124,7 +124,7 @@
                     </a>
                 </div>
                 <figure class="home-trailer-poster movie-trigger" >
-                    <a href="#"><img title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>
+                    <a href="#"><img style="margin-top:-0px;padding: 1px 1px !important;border:0 !important;border-radius:0 !important" class="btn trans-button movie-trigger" title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>
                 </figure>
                 @if ($data->getRating())
                     <div class="ratings">
