@@ -3561,3 +3561,16 @@ div.media img {
 	-o-animation-duration:.75s;
 	animation-duration:.75s
 }
+
+div.play-button {
+    position: absolute;
+    z-index: 100;
+    margin-top: 134px;
+    margin-left: 84px;
+}
+
+div.play-button i
+{
+    color: rgba(122,122,122,0.8) !important;
+    background: transparent;
+}
