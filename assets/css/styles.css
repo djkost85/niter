@@ -3598,7 +3598,7 @@ div.media img {
 
 .play-button i
 {
-    color: rgba(231, 231, 231,0.9) !important;
+    color: rgba(255, 255, 255,0.8) !important;
     background: transparent;
-    text-shadow: 2px 2px 2px rgba(150, 150, 150,0.9) !important;
+    text-shadow: 2px 2px 2px rgba(69, 69, 69, 0.6) !important;
 }
