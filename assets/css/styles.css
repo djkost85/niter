@@ -3562,7 +3562,8 @@ div.media img {
 	animation-duration:.75s
 }
 
-div.play-button {
+div.play-button
+{
     position: absolute;
     z-index: 100;
     margin-top: 134px;
