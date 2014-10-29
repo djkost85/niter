@@ -78,7 +78,12 @@
         <div class="main jumbotron row mobile-only col-xs-12" style="background-image: url({{{ asset($data->getBackground()) }}});">
             <div class="poster">
                 <figure class="home-trailer-poster" >
-                    <a href="#"><img itemprop="image" title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>                           
+                    <div class="play-button">
+                        <a href="#">
+                            <i class="fa fa-play-circle-o fa-5x movie-trigger"></i>
+                        </a>
+                    </div>
+                    <a href="#"><img itemprop="image" title="{{$data->getBackground()}}" src="{{$data->getPoster()}}" class="img-responsive" alt="{{{ $data->getTitle() . 'Poster' }}}"></a>
                 </figure>
                 @if ($data->getRating())
                     <div class="ratings">
