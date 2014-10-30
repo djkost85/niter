@@ -60,6 +60,10 @@ return array(
 			'type' => 'text',
 			'limit' => 1,
 		),
+		'ad_home_jumbo' => array(
+            'title' => trans('dash.ad home jumbo'),
+            'type' => 'textarea',
+        ),
 		'uri_case' => array(
 			'title' => trans('dash.resource uri first letter'),
 			'type' => 'enum',

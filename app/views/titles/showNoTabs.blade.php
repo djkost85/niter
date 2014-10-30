@@ -52,11 +52,6 @@
 
 @section('content')
     <div itemscope itemtype="http://schema.org/Movie" class="main-content row">
-        @if($ad = $options->getHomeJumboAd())
-            <div class="row ads-row">
-                {{ $ad }}
-            </div>
-        @endif
         {{--Modal ready for any use--}}
         <div class="yt-modal-box"></div>
         {{--Modal ready for any use--}}
@@ -220,6 +215,11 @@
             <div class="transparent">
             </div>            
         </div>
+        @if($ad = $options->getMovieJumboAd())
+            <div class="row well ads-row">
+                {{ $ad }}
+            </div>
+        @endif
         <div class="secondary row col-xs-12">
             {{--Detailed information--}}
             <div class="col-xs-12 details mobile-only">

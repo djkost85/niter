@@ -397,6 +397,19 @@ class Options
 		}
 	}
 
+    /**
+     * Returns home jumbo ad.
+     *
+     * @return string
+     */
+    public function getMovieJumboAd()
+    {
+        if (isset($this->options['ad_movie_jumbo']))
+        {
+            return $this->options['ad_movie_jumbo'];
+        }
+    }
+
 	/**
 	 * Returns home news ad.
 	 * 

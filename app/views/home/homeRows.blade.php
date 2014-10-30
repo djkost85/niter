@@ -17,11 +17,6 @@
 	{{--Background image and Slider --}}
 	@include('elements.jumbotron')
 	<div class="main-content">
-		@if($ad = $options->getHomeJumboAd())
-			<div class="row ads-row">
-				  {{ $ad }}
-			</div>
-		@endif
 		{{--Modal ready for any use--}}
     	<div class="yt-modal-box"></div>
 		{{--Main content --}}
@@ -108,104 +103,12 @@
 			        <!--/myCarousel-->
 				</div>
 			</div>
-			<div class="row" style="text-align: center;">
-				Ads
-			</div>
-  			@if ($releasesCount > 0)
-				<div class="col-xs-12 zone">
-					<div class="bordered-heading">
-						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
-							<i class="fa fa-film"></i>
-							{{ trans('main.releases') }}
-						</span>
-					</div>
-			  		<div id="releases1" class="row">
-				        <div id="carouselA1" class="carousel row slide col-xs-12" data-interval="false">		                
-				            <!-- Carousel items -->
-				            <div class="carousel-inner">
-				                <div class="item active row">
-				                	@include('elements.titlesFigure', array('array' => $releases))
-				                </div>
-				            </div>
-				  			<div class="row insideTablinks">
-				  				{{ $releases->links() }}
-				  			</div>
-				        </div>
-					</div>
-				</div>
-		    @endif
-  			@if ($mostPopularCount > 0)
-				<div class="col-xs-12 zone">
-					<div class="bordered-heading">
-						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
-							<i class="fa fa-film"></i>
-							{{ trans('main.mostpopular') }}
-						</span>
-					</div>
-			  		<div id="mostPopular1" class="row">
-				        <div id="carouselB1" class="carousel row slide col-xs-12" data-interval="false">		                
-				            <!-- Carousel items -->
-				            <div class="carousel-inner">
-				                <div class="item active row">
-				                	@include('elements.titlesFigure', array('array' => $mostPopular))
-				                </div>
-				            </div>
-				  			<div class="row insideTablinks">
-				  				{{ $mostPopular->links() }}
-				  			</div>
-				        </div>
-					</div>
-				</div>
-		    @endif
-			@if ($lastAddedCount > 0)
-				<div class="col-xs-12 zone">
-					<div class="bordered-heading">
-						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
-							<i class="fa fa-film"></i>
-							{{ trans('main.lastadded') }}
-						</span>
-					</div>
-			  		<div id="lastAdded1" class="row">
-				        <div id="carouselC1" class="carousel row slide col-xs-12" data-interval="false">		                
-				            <!-- Carousel items -->
-				            <div class="carousel-inner">
-				                <div class="item active row">
-				                	@include('elements.titlesFigure', array('array' => $lastAdded))
-				                </div>
-				            </div>
-				  			<div class="row insideTablinks">
-				  				{{ $lastAdded->links() }}
-				  			</div>
-				        </div>
-					</div>
-				</div>
-		    @endif
-  			@if ($reindexedCount > 0)
-				<div class="col-xs-12 zone">
-					<div class="bordered-heading">
-						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
-							<i class="fa fa-film"></i>
-							{{ trans('main.reindexed') }}
-						</span>
-					</div>
-			  		<div id="reindexed1" class="row">
-				        <div id="carouselD1" class="carousel row slide col-xs-12" data-interval="false">		                
-				            <!-- Carousel items -->
-				            <div class="carousel-inner">
-				                <div class="item active row">
-				                	@include('elements.titlesFigure', array('array' => $reindexed))
-				                </div>
-				            </div>
-				  			<div class="row insideTablinks">
-				  				{{ $reindexed->links() }}
-				  			</div>
-				        </div>
-					</div>
-				</div>
-		    @endif
 		</div>
-
-
+        @if($ad = $options->getHomeJumboAd())
+            <div class="row well ads-row">
+                  {{ $ad }}
+            </div>
+        @endif
 		{{--Tabs with Relevant Movies--}}
 		<div id="tabs" class="row desktop-only">
 			<ul class="nav nav-tabs" role="tablist">
@@ -285,6 +188,100 @@
 		    @endif
 	        </div>
 		</div>  		   
+		<div class="row mobile-only">
+  			@if ($releasesCount > 0)
+				<div class="col-xs-12 zone">
+					<div class="bordered-heading">
+						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
+							<i class="fa fa-film"></i>
+							{{ trans('main.releases') }}
+						</span>
+					</div>
+			  		<div id="releases1" class="row">
+				        <div id="carouselA1" class="carousel row slide col-xs-12" data-interval="false">
+				            <!-- Carousel items -->
+				            <div class="carousel-inner">
+				                <div class="item active row">
+				                	@include('elements.titlesFigure', array('array' => $releases))
+				                </div>
+				            </div>
+				  			<div class="row insideTablinks">
+				  				{{ $releases->links() }}
+				  			</div>
+				        </div>
+					</div>
+				</div>
+		    @endif
+  			@if ($mostPopularCount > 0)
+				<div class="col-xs-12 zone">
+					<div class="bordered-heading">
+						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
+							<i class="fa fa-film"></i>
+							{{ trans('main.mostpopular') }}
+						</span>
+					</div>
+			  		<div id="mostPopular1" class="row">
+				        <div id="carouselB1" class="carousel row slide col-xs-12" data-interval="false">
+				            <!-- Carousel items -->
+				            <div class="carousel-inner">
+				                <div class="item active row">
+				                	@include('elements.titlesFigure', array('array' => $mostPopular))
+				                </div>
+				            </div>
+				  			<div class="row insideTablinks">
+				  				{{ $mostPopular->links() }}
+				  			</div>
+				        </div>
+					</div>
+				</div>
+		    @endif
+			@if ($lastAddedCount > 0)
+				<div class="col-xs-12 zone">
+					<div class="bordered-heading">
+						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
+							<i class="fa fa-film"></i>
+							{{ trans('main.lastadded') }}
+						</span>
+					</div>
+			  		<div id="lastAdded1" class="row">
+				        <div id="carouselC1" class="carousel row slide col-xs-12" data-interval="false">
+				            <!-- Carousel items -->
+				            <div class="carousel-inner">
+				                <div class="item active row">
+				                	@include('elements.titlesFigure', array('array' => $lastAdded))
+				                </div>
+				            </div>
+				  			<div class="row insideTablinks">
+				  				{{ $lastAdded->links() }}
+				  			</div>
+				        </div>
+					</div>
+				</div>
+		    @endif
+  			@if ($reindexedCount > 0)
+				<div class="col-xs-12 zone">
+					<div class="bordered-heading">
+						<span style="border-color:{{$options->getColor('warning')}};color:{{$options->getColor('warning')}}" class="text-border-top">
+							<i class="fa fa-film"></i>
+							{{ trans('main.reindexed') }}
+						</span>
+					</div>
+			  		<div id="reindexed1" class="row">
+				        <div id="carouselD1" class="carousel row slide col-xs-12" data-interval="false">
+				            <!-- Carousel items -->
+				            <div class="carousel-inner">
+				                <div class="item active row">
+				                	@include('elements.titlesFigure', array('array' => $reindexed))
+				                </div>
+				            </div>
+				  			<div class="row insideTablinks">
+				  				{{ $reindexed->links() }}
+				  			</div>
+				        </div>
+					</div>
+				</div>
+		    @endif
+		</div>
 		{{--End of Tabs with Relevant Movies--}}
 		{{--Beginning of News and in Theaters now--}}
 		<div class="row secondary col-xs-12">
